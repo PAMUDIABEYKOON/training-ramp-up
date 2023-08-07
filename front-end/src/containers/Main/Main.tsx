@@ -1,4 +1,4 @@
-import { DataTable } from '../components/DataTable';
+import { DataTable } from '../../components/DataTable/DataTable';
 
 export const Main = () => {
   return (
