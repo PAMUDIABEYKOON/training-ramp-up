@@ -12,9 +12,45 @@ import {
   GridToolbarContainer,
 } from '@mui/x-data-grid';
 import { useDispatch, useSelector } from 'react-redux';
-import { initialRows, setRowModesModel, setRows } from '../redux/slice';
+import { setRowModesModel, setRows } from '../redux/slice';
 import { useEffect } from 'react';
 import { generateID } from '../utils/GenerateIds';
+import { getStudents } from '../redux/actions';
+
+export const initialRows: GridRowsProp = [
+  {
+    id: generateID(),
+    name: 'Ted',
+    gender: 'Male',
+    address: 'toronto',
+    mobile: '767778984',
+    dateOfBirth: new Date('1990-01-05').toString(),
+  },
+  {
+    id: generateID(),
+    name: 'Rachel',
+    gender: 'Female',
+    address: 'sydney',
+    mobile: '67778988',
+    dateOfBirth: new Date('2000-07-25').toString(),
+  },
+  {
+    id: generateID(),
+    name: 'Justin',
+    gender: 'Male',
+    address: 'Ohio',
+    mobile: '767778909',
+    dateOfBirth: new Date('2002-03-02').toString(),
+  },
+  {
+    id: generateID(),
+    name: 'Emma',
+    gender: 'Female',
+    address: 'toronto',
+    mobile: '767778899',
+    dateOfBirth: new Date('1995-01-05').toString(),
+  },
+];
 
 interface EditToolbarProps {
   setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
@@ -67,12 +103,19 @@ const EditToolbar = (props: EditToolbarProps) => {
 
 export const DataTable = () => {
   const dispatch = useDispatch();
+  //const deletionSuccess = useSelector((state: any) => state.data.deletionSuccess);
   const rows = useSelector((state: any) => state.data.records);
   const rowModesModel = useSelector((state: any) => state.data.rowModesModel);
 
+  //api call get list
   useEffect(() => {
-    dispatch(setRows(initialRows));
+    dispatch(getStudents());
   }, [dispatch]);
+
+
+  // useEffect(() => {
+  //   dispatch(setRows(initialRows));
+  // }, [dispatch]);
 
   const handleRowEditStop: GridEventListener<'rowEditStop'> = (
     params,
@@ -89,14 +132,31 @@ export const DataTable = () => {
     );
   };
 
-  const handleSaveClick = (id: GridRowId) => () => {
-    dispatch(
-      setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } }),
-    );
+  const handleSaveClick = (id: GridRowId) => async () => {
+    // try {
+    //   const updatedStudentData = {}; // Replace with the actual updated data
+    // // Dispatch the updateStudent action with the studentId and updated data
+    // await dispatch(updateStudent(Number(id), updatedStudentData));
+    // dispatch(
+    //   setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } }),
+    // );
+    // } catch (error) {
+    //   console.error('Error updating student', error);
+    // }
+    
   };
 
-  const handleDeleteClick = (id: GridRowId) => () => {
-    dispatch(setRows(rows.filter((row: { id: GridRowId }) => row.id !== id)));
+  const handleDeleteClick = (id: GridRowId) => async () => {
+    // try {
+    //   const studentId = Number(id); // Convert id to number
+    //   await dispatch(deleteStudent(studentId));
+    //   if (deletionSuccess) {
+    //     dispatch(setRows(rows.filter((row: { id: GridRowId }) => row.id !== id)));
+    //     dispatch(setDeletionSuccess(false));
+    //   } 
+    // } catch (error) {
+    //   console.error('Error deleting student', error);
+    // }
   };
 
   const handleCancelClick = (id: GridRowId) => () => {
