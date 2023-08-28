@@ -62,10 +62,6 @@ export const SignUp = () => {
        }
     }
 
-
-
-
-        
     return (
         <Box sx={{ height: 'auto', backgroundColor: '#e1e8e8', alignItems:'flex-start', display: 'flex', padding: '20px', margin: '20px', flexDirection: 'column'}}>
             <Box sx={{ width: '600px', backgroundColor: '#e1e8e8' }}></Box>
@@ -73,7 +69,7 @@ export const SignUp = () => {
             <TextField
                 required
                 variant='filled'
-                label='Email'
+                placeholder='Email'
                 size= 'small'
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
@@ -83,7 +79,7 @@ export const SignUp = () => {
                 <TextField 
                     required
                     variant='filled'
-                    label='Password'
+                    placeholder='Password'
                     size= 'small'
                     type='password'
                     value={password}
@@ -93,7 +89,7 @@ export const SignUp = () => {
                 <TextField 
                     required
                     variant='filled'
-                    label='Confirm Password'
+                    placeholder='Confirm Password'
                     size= 'small'
                     type='password'
                     value={confirmedPassword}

@@ -82,7 +82,7 @@ export const Login = () => {
                 <TextField
                     required
                     variant='filled'
-                    label='Username'
+                    placeholder='Username'
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     sx={{ marginBottom: '15px', width: '500px'}}
@@ -90,7 +90,7 @@ export const Login = () => {
                 <TextField
                     required
                     variant='filled'
-                    label='Password'
+                    placeholder='Password'
                     type='password'
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
