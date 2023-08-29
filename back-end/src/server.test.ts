@@ -49,4 +49,13 @@ describe('API Functions', () => {
     const res = await request(app).delete(`/students/${nonExistentId}`);
     expect(res.statusCode).toEqual(400);
   });
+
+  it('registers a new user', async () => {
+    const res = await request(app)
+      .post('/register')
+      .send({ username: 'newuser@example.com', password: 'password123', role: 'user' });
+
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual({ token: 'access-token', message: 'USER REGISTERED' });
+  });
 });

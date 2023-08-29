@@ -22,7 +22,7 @@ export const registerApi = async (
     if (axiosError.response && axiosError.response.status === 400) {
       throw new Error('User already exists');
     } else {
-      console.log('An error occurred:', axiosError.message);
+      throw new Error((axiosError.message as any).message as string);
     }
   }
 };
@@ -38,9 +38,9 @@ export const loginApi = async (username: String, password: String) => {
   } catch (error) {
     const axiosError = error as AxiosError;
     if (axiosError.response && axiosError.response.status === 400) {
-      console.log(axiosError.response.data);
+      throw new Error((axiosError.response.data as any).message as string);
     } else {
-      console.log('An error occurred:', axiosError.message);
+      throw new Error((axiosError.message as any).message as string);
     }
   }
 };

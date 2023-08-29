@@ -6,17 +6,18 @@ import { check, validationResult } from 'express-validator';
 
 export const register = async (req: Request, res: Response) => {
   try {
+    const tempReq = req;
     await Promise.all([
-      check('username', 'Email should be a valid email').isEmail().run(req),
+      check('username', 'Email should be a valid email').isEmail().run(tempReq),
       check('password', 'Password should be greater than 5 characters')
         .isLength({ min: 6 })
-        .run(req),
+        .run(tempReq),
       check('role', "User role should be either 'admin' or 'user'")
         .isIn(['admin', 'user'])
-        .run(req),
+        .run(tempReq),
     ]);
 
-    const errors = validationResult(req);
+    const errors = validationResult(tempReq);
     if (!errors.isEmpty()) {
       return res.status(400).json({
         errors: errors.array(),

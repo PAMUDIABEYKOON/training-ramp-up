@@ -1,11 +1,11 @@
-import { Box, Button, TextField, Typography } from '@mui/material';
+import { Alert, AlertProps, Box, Button, Snackbar, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { loginApi, userAuthenticatedApi } from '../../api/authApi';
 import jwt_decode from 'jwt-decode';
 import { useDispatch } from 'react-redux';
 import { setCurrentUser, setUserRole } from '../../redux/userSlice';
-import { AxiosError } from 'axios';
+import React from 'react';
 
 export interface JwtPayload {
   username: string;
@@ -14,6 +14,14 @@ export interface JwtPayload {
 }
 
 export const Login = () => {
+
+    const [snackbar, setSnackbar] = React.useState<Pick<
+    AlertProps,
+    'children' | 'severity'
+  > | null>(null);
+
+  const handleCloseSnackbar = () => setSnackbar(null);
+  
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -45,41 +53,29 @@ export const Login = () => {
         }
       }
     } catch (error) {
-      if (error instanceof AxiosError && error.response) {
-        const errorMessage =
-          error.response.data || 'An error occurred during login.';
-        alert(`Login error: ${errorMessage}`);
+      if (
+        error instanceof Error && 
+        error.message === 'The email address entered is not connected to an account'
+      ) {
+        setSnackbar({ children: error.message, severity: 'error' });
+      } else if (
+        error instanceof Error && 
+        error.message === 'Wrong Username and Password Combination'
+      ) {
+      setSnackbar({ children: error.message , severity: 'error' });
       } else {
-        alert('An error occurred during login. Please try again.');
+        setSnackbar({ children: 'An error occured. Please try again' , severity: 'error' });
       }
     }
-
-    //const users = useSelector((state: any) => state.user.users);
-
-    // const foundUser = users.find((user: { username: string; password: string; }) => user.username === username && user.password === password);
-
-    // if (foundUser) {
-
-    //     dispatch(setCurrentUser(foundUser));
-    //     if (foundUser.role === 'admin') {
-    //         navigate('/admin');
-    //     } else {
-    //         navigate('/main');
-    //     }
-    // } else {
-    //     alert('No user found for the given username and password');
-    // }
   };
 
   return (
     <Box
       sx={{
         height: 'auto',
-        backgroundColor: 'white',
         alignItems: 'center',
         display: 'flex',
-        padding: '20px',
-        margin: '20px',
+        marginTop: '100px',
         flexDirection: 'column',
       }}
     >
@@ -124,11 +120,24 @@ export const Login = () => {
           >
             Login
           </Button>
-          <Button variant="text" size="small" onClick={handleRegisterClick}>
+          <Button 
+            variant="text" 
+            onClick={handleRegisterClick}
+          >
             Register Here
           </Button>
         </Box>
       </Box>
+      {!!snackbar && (
+        <Snackbar
+          open
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          onClose={handleCloseSnackbar}
+          autoHideDuration={6000}
+        >
+          <Alert {...snackbar} onClose={handleCloseSnackbar} />
+        </Snackbar>
+      )}
     </Box>
   );
 };

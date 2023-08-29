@@ -1,4 +1,4 @@
-import { Box, Button, TextField, Typography } from '@mui/material';
+import { Alert, AlertProps, Box, Button, Snackbar, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { setCurrentUser, setUserRole } from '../../redux/userSlice';
@@ -6,8 +6,17 @@ import { useDispatch } from 'react-redux';
 import { registerApi, userAuthenticatedApi } from '../../api/authApi';
 import jwt_decode from 'jwt-decode';
 import { JwtPayload } from '../LoginPage/LoginPage';
+import React from 'react';
 
 export const SignUp = () => {
+
+  const [snackbar, setSnackbar] = React.useState<Pick<
+    AlertProps,
+    'children' | 'severity'
+  > | null>(null);
+
+  const handleCloseSnackbar = () => setSnackbar(null);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -53,17 +62,19 @@ export const SignUp = () => {
               error instanceof Error &&
               error.message === 'User already exists'
             ) {
-              alert('User already exists');
+              setSnackbar({ children: 'User already exists', severity: 'error' });
+            } else {
+              setSnackbar({ children: 'An error occured. Please try again' , severity: 'error' });
             }
           }
         } else {
-          alert('Password should contain at least 6 characters');
+          setSnackbar({ children: 'Password should contain at least 6 characters', severity: 'error' });
         }
       } else {
-        alert('Passwords do not match');
+        setSnackbar({ children: 'Passwords do not match', severity: 'error' });
       }
     } else {
-      alert('Invalid email');
+      setSnackbar({ children: 'Invalid email. Please enter a valid email', severity: 'error' });
     }
   };
 
@@ -71,71 +82,83 @@ export const SignUp = () => {
     <Box
       sx={{
         height: 'auto',
-        backgroundColor: '#e1e8e8',
-        alignItems: 'flex-start',
+        alignItems: 'center',
         display: 'flex',
-        padding: '20px',
-        margin: '20px',
+        marginTop: '100px',
         flexDirection: 'column',
       }}
     >
-      <Box sx={{ width: '600px', backgroundColor: '#e1e8e8' }}></Box>
-      <Typography variant="h5" sx={{ marginBottom: '30px' }}>
-        Register Here
-      </Typography>
-      <TextField
-        required
-        variant="filled"
-        placeholder="Email"
-        size="small"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        sx={{ marginBottom: '15px', width: '500px' }}
-      />
-      <Box style={{ display: 'flex', justifyContent: 'flex-start' }}>
-        <TextField
-          required
-          variant="filled"
-          placeholder="Password"
-          size="small"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          sx={{ marginBottom: '15px', width: '240px', marginRight: '20px' }}
-        />
-        <TextField
-          required
-          variant="filled"
-          placeholder="Confirm Password"
-          size="small"
-          type="password"
-          value={confirmedPassword}
-          onChange={(e) => setConfirmedPassword(e.target.value)}
-          sx={{ marginBottom: '15px', width: '240px' }}
-        />
-      </Box>
-
-      <Box
-        sx={{
-          marginTop: '40px',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <Button
-          variant="contained"
-          onClick={handleRegisterClick}
-          disabled={isRegisterDisabled}
-          sx={{ marginBottom: '10px', width: '500px' }}
+      <Box sx={{ width: '600px', backgroundColor: '#e1e8e8' }}>
+        <Typography 
+          variant="h5" 
+          sx={{ marginBottom: '20px', marginTop: '20px' }}
         >
-          Register
-        </Button>
-        <Button variant="text" onClick={handleLoginClick}>
-          Already have an account?
-        </Button>
+          Register Here
+        </Typography>
+        <TextField
+          required
+          variant="filled"
+          placeholder="Email"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          sx={{ marginBottom: '15px', width: '500px' }}
+        />
+        <Box style={{ display: 'flex', justifyContent: 'center' }}>
+          <TextField
+            required
+            variant="filled"
+            placeholder="Password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            sx={{ marginBottom: '15px', width: '240px', marginRight: '20px' }}
+          />
+          <TextField
+            required
+            variant="filled"
+            placeholder="Confirm Password"
+            type="password"
+            value={confirmedPassword}
+            onChange={(e) => setConfirmedPassword(e.target.value)}
+            sx={{ marginBottom: '15px', width: '240px' }}
+          />
+        </Box>
+        <Box
+          sx={{
+            margin: '40px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Button
+            variant="contained"
+            onClick={handleRegisterClick}
+            disabled={isRegisterDisabled}
+            sx={{ marginBottom: '15px', width: '230px' }}
+          >
+            Register
+          </Button>
+          <Button 
+            variant="text" 
+            onClick={handleLoginClick}
+          >
+            Already have an account?
+          </Button>
+        </Box>
       </Box>
+      {!!snackbar && (
+        <Snackbar
+          open
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          onClose={handleCloseSnackbar}
+          autoHideDuration={6000}
+        >
+          <Alert {...snackbar} onClose={handleCloseSnackbar} />
+        </Snackbar>
+      )}
     </Box>
+    
   );
 };
