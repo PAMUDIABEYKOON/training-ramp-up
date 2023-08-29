@@ -17,7 +17,6 @@ app.use(cookieParser());
 app.use(studentRoutes);
 app.use(userRoutes);
 
-
 const server = createServer(app);
 const io = new Server(server, {
   cors: {

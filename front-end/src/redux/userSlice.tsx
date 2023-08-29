@@ -13,7 +13,7 @@ const userSlice = createSlice({
   initialState: {
     users: Users,
     userRole: null,
-    currentUser: null
+    currentUser: null,
   },
   reducers: {
     setUserRole: (state, action) => {
@@ -24,7 +24,7 @@ const userSlice = createSlice({
     },
     setCurrentUser: (state, action) => {
       state.currentUser = action.payload;
-    }
+    },
   },
 });
 
